@@ -5,13 +5,17 @@
 
 package com.m2i.jpa;
 
+import dao.RoleDao;
+import model.Role;
+
 /**
  *
  * @author elouf
  */
 public class JPA {
 
-    public static void main(String[] args) {
-        //System.out.println("Hello World!");
+    public static void main(String[] args)  {
+
     }
+    
 }
