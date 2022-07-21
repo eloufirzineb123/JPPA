@@ -10,6 +10,7 @@ import javax.persistence.Persistence;
 
 
 
+
 public class SessionHelper {
 
     private static EntityManager entityManager;
@@ -18,6 +19,8 @@ public class SessionHelper {
         if (entityManager == null) {
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("test_jpa");
             entityManager = emf.createEntityManager();
+            
+          
         }
 
         return entityManager;

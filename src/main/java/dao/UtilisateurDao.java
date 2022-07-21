@@ -9,18 +9,20 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
-import model.Role;
+import model.Utilisateur;
 
-public class RoleDao {
-    public Role findById(long id) {
+
+public class UtilisateurDao {
+    
+    public Utilisateur findById(long id) {
         EntityManager entityManager = SessionHelper.getEntityManager();
-        Role roleFound = entityManager.find(Role.class, id);
+        Utilisateur roleFound = entityManager.find(Utilisateur.class, id);
         if (roleFound == null) {
             System.out.println("Attention le role avec l'id: " + id + " n'existe pas !");
         }
         return roleFound;
     }
-    public void create(Role roleToCreate) {
+    public void create(Utilisateur roleToCreate) {
         // On vérifie les données que l'on reçoit en paramètre
         if (roleToCreate == null) {
             System.out.println("L'objet role ne peut pas être null");
@@ -43,59 +45,29 @@ public class RoleDao {
         }
     }
     
-     public List<Role> findAll(){
+    public List<Utilisateur> findAll(){
         EntityManager entityManager = SessionHelper.getEntityManager();
-        Query findAllQuery = entityManager.createQuery("select r from Role r");
+        Query findAllQuery = entityManager.createQuery("select p from Utilisateur p");
         return findAllQuery.getResultList();
     }
-    /*
-    public List<Role> findAll() {
-       
-        EntityManager entityManager = SessionHelper.getEntityManager();
-     
-        List<Role> results = entityManager.createQuery("select a from Role a", Role.class).getResultList();
-           
-            return results;
-    }
-    */
     
-    // Différente manière pour l'update :
-    // public void update(Long id, String identifiant, String description) {
-    // => utiliser l'id en paramètre pour récupérer le role que l'on souhaite modifier
-    // puis set les données :
-    // ...
-    // roleToUpdate.setIdentifiant(identifiant);
-    // ...
-    // Différente manière pour l'update :
-    // public void update(Long id, Role roleData) {
-    // => utiliser l'id en paramètre pour récupérer le role que l'on souhaite modifier
-    // puis set les données :
-    // ...
-    // roleToUpdate.copy(roleData); -> on set les données uniquement si elle ne sont pas null
-    // ...
-    // Différente manière pour l'update :
-    // public void update(Role roleData) {
-    // => utiliser role.getId(); pour récupérer le role que l'on souhaite modifier
-    // puis set les données :
-    // ...
-    // roleToUpdate.copy(roleData); -> on set les données uniquement si elle ne sont pas null
-    // ...
-    public void update(Long id, Role roleData) {
+    
+    public void update(Long id, Utilisateur rData) {
         EntityManager entityManager = SessionHelper.getEntityManager();
         // On récupère le role qu'on souhaite modifier
-        Role roleToUpdate = entityManager.find(Role.class, id);
+        Utilisateur rToUpdate = entityManager.find(Utilisateur.class, id);
         // Si le role n'existe pas on ne fait pas d'update
-        if (roleToUpdate == null) {
+        if (rToUpdate == null) {
             System.out.println("Le role avec l'id:" + id + " n'existe pas");
             return;
         }
         // on set les données uniquement si elle ne sont pas null
-        roleToUpdate.copy(roleData);
+        rToUpdate.copy(rData);
         EntityTransaction tx = null;
         try {
             tx = entityManager.getTransaction();
             tx.begin();
-            entityManager.merge(roleToUpdate);           
+            entityManager.merge(rToUpdate);           
             tx.commit();
         } catch (Exception e) {
             System.out.println("Une erreur est survenu lors de la modification");
@@ -104,6 +76,5 @@ public class RoleDao {
             }
         }
     }
-    
     
 }
