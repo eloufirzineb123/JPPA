@@ -4,10 +4,12 @@
  */
 package dao;
 
+import helper.SessionHelper;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
 import java.util.Date;
-import java.util.List;
+
+import javax.persistence.EntityManager;
 import model.Adresse;
 import model.Role;
 import model.Utilisateur;
@@ -15,8 +17,41 @@ import model.Utilisateur;
 public class DoaHebernate {
 
     public static void main(String[] args) {
+        
+   
+        
+        EntityManager entityManager = SessionHelper.getEntityManager();
+        
+        UtilisateurDao userDao = new UtilisateurDao();
         RoleDao roleDao = new RoleDao();
-        Adresse ads=new Adresse();
+       
+        AddressDao  adresseDao= new AddressDao();
+        
+        
+        Role role = new Role();
+        role.setIdentifiant("Perstataire");
+        role.setDescription("Le rôle perstataire");
+        
+        roleDao.create(role);
+        
+        Role userRole = roleDao.findById(1L);
+        Utilisateur newUser = new Utilisateur("Mme", "Madame Untel", "Untel", "Untel@gmail.com", "passw0rd", new Date(), new Date(), new Date(), userRole);
+        
+        userDao.create(newUser);
+        
+        
+        newUser.addAddress(new Adresse(newUser, "10 rue de l'insurection", "75000", "Paris", "France", false));
+        
+        userDao.update(1L, newUser);
+        
+        //Adresse addressToRemove = newUser.getAdresses().get(newUser.getAdresses().size() - 1);
+        //newUser.removeAddress(addressToRemove);
+        //userDao.update(newUser.getIdUtilisateur(), newUser);
+        
+       // userDao.remove(newUser);
+        entityManager.close();
+       
+     /*   
         // Select role
         //Role roleAdmin = roleDao.findById(1);
         //System.out.println("Role with id 1 : " + roleAdmin.getDescription());
@@ -71,7 +106,38 @@ public class DoaHebernate {
 
         UtiDao.update(1L, uData);
         
+        
+             Adresse adDao =new Adresse("45100", "france", true, "rue aa", "orleans", UtiDao.findById(1L));
+             adresseDao.create(adDao);
+             
+             
+              Adresse adDao2 =new Adresse("100", "maroc", false, "rue aa", "orleans", UtiDao.findById(1L));
+             adresseDao.create(adDao2);
+             
+             Adresse adDao3 =new Adresse("20", "maroc",false, "rue 2aa", "rabat", UtiDao.findById(1L));
+             adresseDao.create(adDao3);
+        
+             
+             
+        
+        List<Adresse> add = adresseDao.findAll();
+         for( Adresse r: add) {
+                System.out.println( "liste des adresses " + r );
+            }  
+         
+        
+         
+          Utilisateur utii = UtiDao.findById(1L);
+           for( Adresse adr : utii.getAdre() ) {
+               // System.out.println( "mon adr" + adr );
+            }
+         
+       //  adresseDao.findByUtilisateur(utii);
+         
+        
         Utilisateur utiPresta = UtiDao.findById(1L);
+        
+        
 //        
         if (utiPresta != null) {
             System.out.println("The utili has been updated updated : " + utiPresta.getNom());
@@ -82,16 +148,7 @@ public class DoaHebernate {
          for( Utilisateur r: resu) {
                 System.out.println( "aaaaaaaaaaaaaaaaaaaaaaaa" + r );
             }
-        /*
-          SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        try {
-            Date date = sdf.parse("12-05-2022");
-            
-        } catch (ParseException ex) {
-           
-        }   // garder en memoire (transformation )
-         
-         */
+      
         
         // Update a role
         Role roleData = new Role();
@@ -113,4 +170,8 @@ public class DoaHebernate {
             }
 //     
     }
+
+*/
+    }
+
 }

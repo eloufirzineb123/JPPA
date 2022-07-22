@@ -13,28 +13,41 @@ import model.Utilisateur;
 
 
 public class UtilisateurDao {
-    
-    public Utilisateur findById(long id) {
+    public List<Utilisateur> findAll(){
         EntityManager entityManager = SessionHelper.getEntityManager();
-        Utilisateur roleFound = entityManager.find(Utilisateur.class, id);
-        if (roleFound == null) {
-            System.out.println("Attention le role avec l'id: " + id + " n'existe pas !");
-        }
-        return roleFound;
+        Query findAllQuery = entityManager.createQuery("select c from Utilisateur c");
+        return findAllQuery.getResultList();
     }
-    public void create(Utilisateur roleToCreate) {
+    
+    public Utilisateur findById(Long id) {
+        EntityManager entityManager = SessionHelper.getEntityManager();
+        Utilisateur utilisateurFounded = entityManager.find(Utilisateur.class, id);
+
+        if (utilisateurFounded == null) {
+            System.out.println("Attention le utilisateur avec l'id: " + id + " n'existe pas !");
+        }
+
+        return utilisateurFounded;
+    }
+
+    public void create(Utilisateur utilisateurToCreate) {
         // On vérifie les données que l'on reçoit en paramètre
-        if (roleToCreate == null) {
-            System.out.println("L'objet role ne peut pas être null");
+        if (utilisateurToCreate == null) {
+            System.out.println("L'objet utilisateur ne peut pas être null");
             return;
         }
+
         EntityManager entityManager = SessionHelper.getEntityManager();
+
         // On déclare notre transaction avec pour valeur par défaut null
         EntityTransaction tx = null;
+
         try {
             tx = entityManager.getTransaction();
             tx.begin();
-            entityManager.persist(roleToCreate);
+
+            entityManager.persist(utilisateurToCreate);
+
             tx.commit();
         } catch (Exception e) {
             System.out.println("Une erreur est survenu lors de la création");
@@ -44,30 +57,52 @@ public class UtilisateurDao {
             }
         }
     }
-    
-    public List<Utilisateur> findAll(){
+
+    // Différente manière pour l'update :
+    // public void update(Long id, String civilite, String prenom, String nom, ......) {
+    // => utiliser l'id en paramètre pour récupérer le utilisateur que l'on souhaite modifier
+    // puis set les données :
+    // ...
+    // utilisateurToUpdate.setCivilite(civilite);
+    // utilisateurToUpdate.setPrenom(prenom);
+    // ...
+
+    // Différente manière pour l'update :
+    // public void update(Long id, Utilisateur utilisateurData) {
+    // => utiliser l'id en paramètre pour récupérer le utilisateur que l'on souhaite modifier
+    // puis set les données :
+    // ...
+    // utilisateurToUpdate.copy(utilisateurData); -> on set les données uniquement si elle ne sont pas null
+    // ...
+
+    // Différente manière pour l'update :
+    // public void update(Utilisateur utilisateurData) {
+    // => utiliser utilisateur.getId(); pour récupérer le utilisateur que l'on souhaite modifier
+    // puis set les données :
+    // ...
+    // utilisateurToUpdate.copy(utilisateurData); -> on set les données uniquement si elle ne sont pas null
+    // ...
+
+    public void update(Long id, Utilisateur utilisateurData) {
         EntityManager entityManager = SessionHelper.getEntityManager();
-        Query findAllQuery = entityManager.createQuery("select p from Utilisateur p");
-        return findAllQuery.getResultList();
-    }
-    
-    
-    public void update(Long id, Utilisateur rData) {
-        EntityManager entityManager = SessionHelper.getEntityManager();
-        // On récupère le role qu'on souhaite modifier
-        Utilisateur rToUpdate = entityManager.find(Utilisateur.class, id);
-        // Si le role n'existe pas on ne fait pas d'update
-        if (rToUpdate == null) {
-            System.out.println("Le role avec l'id:" + id + " n'existe pas");
+        // On récupère le utilisateur qu'on souhaite modifier
+        Utilisateur utilisateurToUpdate = entityManager.find(Utilisateur.class, id);
+
+        // Si le utilisateur n'existe pas on ne fait pas d'update
+        if (utilisateurToUpdate == null) {
+            System.out.println("Le utilisateur avec l'id:" + id + " n'existe pas");
             return;
         }
+
         // on set les données uniquement si elle ne sont pas null
-        rToUpdate.copy(rData);
+        utilisateurToUpdate.copy(utilisateurData);
+
         EntityTransaction tx = null;
+
         try {
             tx = entityManager.getTransaction();
             tx.begin();
-            entityManager.merge(rToUpdate);           
+            entityManager.merge(utilisateurToUpdate);
             tx.commit();
         } catch (Exception e) {
             System.out.println("Une erreur est survenu lors de la modification");
@@ -77,4 +112,24 @@ public class UtilisateurDao {
         }
     }
     
+    public void remove(Utilisateur utilisateurData) {
+        EntityManager entityManager = SessionHelper.getEntityManager();
+        // On récupère le utilisateur qu'on souhaite modifier
+        Utilisateur utilisateurToDelete = entityManager.find(Utilisateur.class, utilisateurData.getIdUtilisateur());
+
+
+        EntityTransaction tx = null;
+
+        try {
+            tx = entityManager.getTransaction();
+            tx.begin();
+            entityManager.remove(utilisateurToDelete);
+            tx.commit();
+        } catch (Exception e) {
+            System.out.println("Une erreur est survenu lors de la modification");
+            if (tx != null) {
+                tx.rollback();
+            }
+        }
+    }
 }

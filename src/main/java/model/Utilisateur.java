@@ -4,11 +4,11 @@
  */
 package model;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,232 +24,307 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "utilisateurs")
 public class Utilisateur {
-    
-     @Id
+
+    @Id
     @Column(name = "id_utilisateur")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUtilisateur;
-     
-     @Column( columnDefinition = "TINYINT(1)")
-     private Boolean actif;
-     
-     
-      @Column( length = 100)
-     private String civilite;
-      
-     @CreationTimestamp
-     @Temporal(TemporalType.TIMESTAMP)
-      @Column(name = "date_creation" ,columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-     private Date datecreation;
-     
-   
-     
-     
-     @UpdateTimestamp
-     @Column(name = "date_modification",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP" )
+
+    @JoinColumn(name = "id_role", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Role role;
+
+    @OneToMany(mappedBy = "utilisateur", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Adresse> adresses;
+
+    @Column(name = "civilite", length = 100)
+    private String civilite;
+
+    @Column(name = "prenom", length = 100)
+    private String prenom;
+
+    @Column(name = "nom", length = 100)
+    private String nom;
+
+    @Column(name = "identifiant", length = 100)
+    private String identifiant;
+
+    @Column(name = "mot_passe", length = 100)
+    private String motPasse;
+
     @Temporal(TemporalType.TIMESTAMP)
-     private Date datemodification;
-     
-     @Column(name = "date_naissance" ,columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-     @Temporal(TemporalType.TIMESTAMP)
-     
-     
-     private Date datenaissance;
-     
-     
-      @Column( length = 100)
-     private String identifiant;
-     
-     @Column( columnDefinition = "TINYINT(1)")
-     private  Boolean marquerEffacer;
-     
-     
-      @Column( length = 100)
-     private String modPass;
-      
-      
-       @Column( length = 100)
-     private String prenon;
-       
-       
-        @ManyToOne 
-        @JoinColumn( name="id_Role" )
-        private Role role;
-        
-        @OneToMany(targetEntity=Adresse.class, mappedBy="utilisa", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }) 
-         private List<Adresse> adre ;
-        
-        
-        
+    @Column(name = "date_naissance", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date dateNaissance;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date_creation", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date dateCreation;
+
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date_modification", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date dateModification;
+
+    @Column(name = "actif", columnDefinition = "TINYINT(1) DEFAULT 1")
+    private Boolean actif;
+
+    @Column(name = "marquer_effacer", columnDefinition = "TINYINT(1) DEFAULT 0")
+    private Boolean marquerEffacer;
+
+    public Utilisateur() {
+    }
+
+    public Utilisateur(Long idUtilisateur, String civilite, String prenom, String nom, String identifiant, String motPasse, Date dateNaissance, Date dateCreation, Date dateModification, Boolean actif, Boolean marquerEffacer, Role role) {
+        this.idUtilisateur = idUtilisateur;
+        this.civilite = civilite;
+        this.prenom = prenom;
+        this.nom = nom;
+        this.identifiant = identifiant;
+        this.motPasse = motPasse;
+        this.dateNaissance = dateNaissance;
+        this.dateCreation = dateCreation;
+        this.dateModification = dateModification;
+        this.actif = actif;
+        this.marquerEffacer = marquerEffacer;
+        this.role = role;
+    }
+
+    public Utilisateur(Long idUtilisateur, String civilite, String prenom, String nom, String identifiant, String motPasse, Date dateNaissance, Date dateCreation, Date dateModification, Role role) {
+        this.idUtilisateur = idUtilisateur;
+        this.civilite = civilite;
+        this.prenom = prenom;
+        this.nom = nom;
+        this.identifiant = identifiant;
+        this.motPasse = motPasse;
+        this.dateNaissance = dateNaissance;
+        this.dateCreation = dateCreation;
+        this.dateModification = dateModification;
+        this.role = role;
+    }
+
+    public Utilisateur(String civilite, String prenom, String nom, String identifiant, String motPasse, Date dateNaissance, Date dateCreation, Date dateModification, Role role) {
+        this.civilite = civilite;
+        this.prenom = prenom;
+        this.nom = nom;
+        this.identifiant = identifiant;
+        this.motPasse = motPasse;
+        this.dateNaissance = dateNaissance;
+        this.dateCreation = dateCreation;
+        this.dateModification = dateModification;
+        this.role = role;
+    }
+
+    public Utilisateur(String civilite, String prenom, String nom, String identifiant, String motPasse, Date dateNaissance, Date dateCreation, Date dateModification) {
+        this.civilite = civilite;
+        this.prenom = prenom;
+        this.nom = nom;
+        this.identifiant = identifiant;
+        this.motPasse = motPasse;
+        this.dateNaissance = dateNaissance;
+        this.dateCreation = dateCreation;
+        this.dateModification = dateModification;
+    }
+
+    public Utilisateur(Long idUtilisateur) {
+        this.idUtilisateur = idUtilisateur;
+    }
+
     public Long getIdUtilisateur() {
         return idUtilisateur;
     }
 
-    public void setActif(Boolean actif) {
-        this.actif = actif;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setCivilite(String civilite) {
-        this.civilite = civilite;
-    }
-
-    public void setDatecreation(Date datecreation) {
-        this.datecreation = datecreation;
-    }
-
-    public void setDatemodification(Date datemodification) {
-        this.datemodification = datemodification;
-    }
-
-    public void setDatenaissance(Date datenaissance) {
-        this.datenaissance = datenaissance;
-    }
-
-    public void setIdentifiant(String identifiant) {
-        this.identifiant = identifiant;
-    }
-
-    public void setMarquerEffacer(Boolean marquerEffacer) {
-        this.marquerEffacer = marquerEffacer;
-    }
-
-    public void setModPass(String modPass) {
-        this.modPass = modPass;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public void setPrenon(String prenon) {
-        this.prenon = prenon;
-    }
-      
-     @Column( length = 100)
-     private String nom;
-
-    public Boolean getActif() {
-        return actif;
+    public void setIdUtilisateur(Long idUtilisateur) {
+        this.idUtilisateur = idUtilisateur;
     }
 
     public String getCivilite() {
         return civilite;
     }
 
-    public Date getDatecreation() {
-        return datecreation;
+    public void setCivilite(String civilite) {
+        this.civilite = civilite;
     }
 
-    public Date getDatemodification() {
-        return datemodification;
+    public String getPrenom() {
+        return prenom;
     }
 
-    public Date getDatenaissance() {
-        return datenaissance;
-    }
-
-    public String getIdentifiant() {
-        return identifiant;
-    }
-
-    public Boolean getMarquerEffacer() {
-        return marquerEffacer;
-    }
-
-    public String getModPass() {
-        return modPass;
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
     }
 
     public String getNom() {
         return nom;
     }
 
-    public String getPrenon() {
-        return prenon;
-    }
-
-  
-  
-
-    public Utilisateur() {
-    }
-
-    public void copy(Utilisateur rData) {
-        
-         if (rData.getIdentifiant() != null) {
-            this.setIdentifiant(rData.getIdentifiant());
-        }
-
-        if (rData.getActif() != null) {
-            this.setActif(rData.getActif());
-        }
-        
-         if (rData.getCivilite() != null) {
-            this.setCivilite(rData.getCivilite());
-        }
-         
-          if (rData.getDatenaissance() != null) {
-            this.setDatenaissance(rData.getDatenaissance());
-        }
-          
-           if (rData.getPrenon() != null) {
-            this.setPrenon(rData.getPrenon());
-        }
-           
-              if (rData.getNom() != null) {
-            this.setNom(rData.getNom());
-        }
-              
-               if (rData.getModPass() != null) {
-            this.setModPass(rData.getModPass());
-        }
-               
-           if (rData.getModPass() != null) {
-            this.setModPass(rData.getModPass());
-        }
-         
-           if (rData.getMarquerEffacer() != null) {
-            this.setMarquerEffacer(rData.getMarquerEffacer());
-        }
-         
-             if (rData.getRole() != null) {
-            this.setRole(rData.getRole());
-        }
-  
-        
-         
-        
-    }
-
-    public Utilisateur(Boolean actif, String civilite, Date datenaissance, String identifiant, Boolean marquerEffacer, String modPass, String prenon, Role role, String nom) {
-        this.actif = actif;
-        this.civilite = civilite;
-        this.datenaissance = datenaissance;
-        this.identifiant = identifiant;
-        this.marquerEffacer = marquerEffacer;
-        this.modPass = modPass;
-        this.prenon = prenon;
-        this.role = role;
+    public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public String getIdentifiant() {
+        return identifiant;
+    }
+
+    public void setIdentifiant(String identifiant) {
+        this.identifiant = identifiant;
+    }
+
+    public String getMotPasse() {
+        return motPasse;
+    }
+
+    public void setMotPasse(String motPasse) {
+        this.motPasse = motPasse;
+    }
+
+    public Date getDateNaissance() {
+        return dateNaissance;
+    }
+
+    public void setDateNaissance(Date dateNaissance) {
+        this.dateNaissance = dateNaissance;
+    }
+
+    public Date getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(Date dateCreation) {
+        this.dateCreation = dateCreation;
+    }
+
+    public Date getDateModification() {
+        return dateModification;
+    }
+
+    public void setDateModification(Date dateModification) {
+        this.dateModification = dateModification;
+    }
+
+    public Boolean isActif() {
+        return actif;
+    }
+
+    public void setActif(Boolean actif) {
+        this.actif = actif;
+    }
+
+    public Boolean isMarquerEffacer() {
+        return marquerEffacer;
+    }
+
+    public void setMarquerEffacer(Boolean marquerEffacer) {
+        this.marquerEffacer = marquerEffacer;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     public void setRole(Role role) {
         this.role = role;
     }
-     
-     
+
+    public List<Adresse> getAdresses() {
+        return adresses;
+    }
+
+    public void setAdresses(List<Adresse> adresses) {
+        this.adresses = adresses;
+    }
+
+    public String getFormatDate(Date date) {
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(date);
+        return "" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.YEAR);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (idUtilisateur != null ? idUtilisateur.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Utilisateur)) {
+            return false;
+        }
+        Utilisateur other = (Utilisateur) object;
+        if ((this.idUtilisateur == null && other.idUtilisateur != null) || (this.idUtilisateur != null && !this.idUtilisateur.equals(other.idUtilisateur))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        String toString = String.format("\n[idUtilisateur=%s, civilite=%s, prenom=%s, nom=%s, identifiant=%s, motPasse=%s, dateNaissance=%s,dateCreation=%s, dateModification=%s, actif=%s, marquerEffacer=%s", idUtilisateur, civilite, prenom, nom, identifiant, motPasse, dateNaissance, dateCreation, dateModification, actif, marquerEffacer);
+        if (role != null) {
+            toString += String.format(" ,role=%s ", role);
+        }
+        return toString;
+    }
     
-     
-     
-     
-     
-     
-     
-     
-     
+    public void addAddress(Adresse address) {
+        if (this.getAdresses() == null) {
+            this.setAdresses(new ArrayList());
+        }
+
+        this.getAdresses().add(address);
+        address.setUtilisateur(this);
+    }
+
+    public void removeAddress(Adresse address) {
+        if (this.getAdresses() == null || this.getAdresses().isEmpty()) {
+            return;
+        }
+        
+        this.getAdresses().remove(address);
+        address.setUtilisateur(null);
+    }
     
+    public void copy(Utilisateur data) {
+        if (data.getCivilite() != null) {
+            this.civilite = data.getCivilite();
+        }
+
+        if (data.getPrenom() != null) {
+            this.prenom = data.getPrenom();
+        }
+
+        if (data.getNom() != null) {
+           this.nom = data.getNom();
+        }
+    
+        if (data.getIdentifiant() != null) {
+            this.identifiant = data.getIdentifiant();
+        }
+    
+        if (data.getMotPasse() != null) {
+            this.motPasse = data.getMotPasse();
+        }
+
+        if (data.getDateNaissance() != null) {
+            this.dateNaissance = data.getDateNaissance();
+        }
+
+        if (data.getDateModification() != null) {
+            this.dateModification = data.getDateModification();
+        }
+
+        if (data.isActif() != null) {
+            this.actif = data.isActif();
+        }
+
+        if (data.isMarquerEffacer() != null) {
+            this.marquerEffacer = data.isMarquerEffacer();
+        }
+
+        if (data.getRole() != null) {
+            this.role = data.getRole();
+        }
+    }
 }
