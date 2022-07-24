@@ -50,33 +50,33 @@ public class AddressDao {
         return query.getResultList();
     }
 
-    public void create(Adresse adresseToCreate) {
-        // On vérifie les données que l'on reçoit en paramètre
-        if (adresseToCreate == null) {
-            System.out.println("L'objet adresse ne peut pas être null");
-            return;
-        }
-
-        EntityManager entityManager = SessionHelper.getEntityManager();
-
-        // On déclare notre transaction avec pour valeur par défaut null
-        EntityTransaction tx = null;
-
-        try {
-            tx = entityManager.getTransaction();
-            tx.begin();
-
-            entityManager.persist(adresseToCreate);
-
-            tx.commit();
-        } catch (Exception e) {
-            System.out.println("Une erreur est survenu lors de la création");
-            if (tx != null) {
-                // Une erreur est survenue, on discard les actions entamés dans la transaction
-                tx.rollback();
-            }
-        }
-    }
+//    public void create(Adresse adresseToCreate) {
+//        // On vérifie les données que l'on reçoit en paramètre
+//        if (adresseToCreate == null) {
+//            System.out.println("L'objet adresse ne peut pas être null");
+//            return;
+//        }
+//
+//        EntityManager entityManager = SessionHelper.getEntityManager();
+//
+//        // On déclare notre transaction avec pour valeur par défaut null
+//        EntityTransaction tx = null;
+//
+//        try {
+//            tx = entityManager.getTransaction();
+//            tx.begin();
+//
+//            entityManager.persist(adresseToCreate);
+//
+//            tx.commit();
+//        } catch (Exception e) {
+//            System.out.println("Une erreur est survenu lors de la création");
+//            if (tx != null) {
+//                // Une erreur est survenue, on discard les actions entamés dans la transaction
+//                tx.rollback();
+//            }
+//        }
+//    }
 
     // Différente manière pour l'update :
     // public void update(Long id, String rue, Integer codePostal, String ville, ......) {

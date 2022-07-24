@@ -8,6 +8,10 @@ package generic;
  *
  * @author elouf
  */
-public class AbstractDao {
+public abstract class AbstractDao<TEntity> {
+    protected Class <TEntity> clazz;
+    
+    
+    
     
 }

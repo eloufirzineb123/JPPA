@@ -8,50 +8,86 @@ import helper.SessionHelper;
 import java.text.DateFormat;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import model.Adresse;
+import model.Produit;
 import model.Role;
 import model.Utilisateur;
 
 public class DoaHebernate {
 
     public static void main(String[] args) {
-        
-   
-        
+
         EntityManager entityManager = SessionHelper.getEntityManager();
-        
+
         UtilisateurDao userDao = new UtilisateurDao();
         RoleDao roleDao = new RoleDao();
-       
-        AddressDao  adresseDao= new AddressDao();
+
+        AddressDao adresseDao = new AddressDao();
+
+        ProduitDao proDao = new ProduitDao();
+        Produit prod1 = new Produit(true, "descrip", "zz", 1.25, "ref", 1);
+        Produit prod2 = new Produit(false, "descrip2", "zz", 2.25, "ref2", 2);
+        Produit prod3 = new Produit(false, "descrip3", "aa", 2.25, "ref2", 2);
+        proDao.create(prod1);
+        proDao.create(prod2);
+        proDao.create(prod3);
+
+        List<Produit> resu = proDao.findByNom("zz");
+        for (Produit r : resu) {
+            System.out.println(" find by name" + r);
+        }
+
+        List<Produit> resu1 = proDao.findByDescription("descrip2");
+        for (Produit r : resu1) {
+            System.out.println(" find by descip2" + r);
+        }
+
+        Double prix1 = 1.25;
+
+        List<Produit> resu2 = proDao.findByPrix(prix1);
+        for (Produit r : resu2) {
+            System.out.println(" find by prix  " + r);
+        }
+        
+        List<Produit> resu3 = proDao.findByReference("ref2");
+        for (Produit r : resu3) {
+            System.out.println(" find by reference  " + r);
+        }
+        
+         List<Produit> resu4 = proDao.findByMostQuantity();
+        for (Produit r : resu4) {
+            System.out.println(" findByMostQuantity  " + r);
+        }
         
         
+        
+        
+
         Role role = new Role();
         role.setIdentifiant("Perstataire");
         role.setDescription("Le rôle perstataire");
-        
+
         roleDao.create(role);
-        
+
         Role userRole = roleDao.findById(1L);
         Utilisateur newUser = new Utilisateur("Mme", "Madame Untel", "Untel", "Untel@gmail.com", "passw0rd", new Date(), new Date(), new Date(), userRole);
-        
+
         userDao.create(newUser);
-        
-        
+
         newUser.addAddress(new Adresse(newUser, "10 rue de l'insurection", "75000", "Paris", "France", false));
-        
+
         userDao.update(1L, newUser);
-        
+
         //Adresse addressToRemove = newUser.getAdresses().get(newUser.getAdresses().size() - 1);
         //newUser.removeAddress(addressToRemove);
         //userDao.update(newUser.getIdUtilisateur(), newUser);
-        
-       // userDao.remove(newUser);
+        userDao.remove(newUser);
         entityManager.close();
-       
-     /*   
+
+        /*   
         // Select role
         //Role roleAdmin = roleDao.findById(1);
         //System.out.println("Role with id 1 : " + roleAdmin.getDescription());
@@ -171,7 +207,7 @@ public class DoaHebernate {
 //     
     }
 
-*/
+         */
     }
 
 }

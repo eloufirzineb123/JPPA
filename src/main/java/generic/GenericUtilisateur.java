@@ -4,10 +4,14 @@
  */
 package generic;
 
+import model.Utilisateur;
+
 /**
  *
  * @author elouf
  */
-public class GenericUtilisateur {
+public class GenericUtilisateur extends AbstractDao<Utilisateur>{
+    
+    
     
 }
